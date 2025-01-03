@@ -1,5 +1,6 @@
 ﻿
 
+using ChatService.Map;
 using ChatService.Repositories.Implementations;
 using ChatService.Repositories.Interfaces;
 using ChatService.Services.Implementations;
@@ -12,6 +13,7 @@ public static class CustomDiManager
     public static WebApplicationBuilder InjectDependencies(this WebApplicationBuilder builder)
     {
         builder.Services
+            .AddAutoMapper(typeof(CustomMapper))
             .AddScoped<IChatRepository, ChatRepository>()
             .AddScoped<IMessageRepository, MessageRepository>()
             .AddScoped<IMessageService, MessageService>()
