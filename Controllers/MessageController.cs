@@ -11,15 +11,9 @@ namespace ChatService.Controllers;
 [Route("api/v1/messages")]
 public class MessageController(MessageService messageService): ControllerBase
 {
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateChat([FromBody] MessageDto chatDto)
-    {
-        await messageService.CreateAsync(chatDto);
-        return Ok();
-    }
 
     [HttpPut("update/{id:int}")]
-    public async Task<IActionResult> UpdateChat([FromRoute] int id, [FromBody] MessageDto chatDto)
+    public async Task<IActionResult> UpdateMessage([FromRoute] int id, [FromBody] MessageDto chatDto)
     {
         await messageService.UpdateAsync(id, chatDto);
         return Ok();

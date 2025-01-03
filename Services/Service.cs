@@ -6,14 +6,14 @@ namespace ChatService.Services;
 
 public interface IService<T, in TDto> where T : class where TDto : class
 {
-    Task CreateAsync(TDto entityDto);
+    Task<T> CreateAsync(TDto entityDto);
     Task UpdateAsync(int id, TDto entityDto);
     Task DeleteAsync(int id);
     Task<T> GetAsync(int id);
 }
 public class Service<T, TDto>(IRepository<T> repository, IMapper mapper): IService<T, TDto> where T : class where TDto : class
 {
-    protected async Task<T> TryGetByIdAsync(int id)
+    private async Task<T> TryGetByIdAsync(int id)
     {
         var entity = await repository.GetAsync(id);
         if (entity == null)
@@ -22,10 +22,11 @@ public class Service<T, TDto>(IRepository<T> repository, IMapper mapper): IServi
         }
         return entity;
     }
-    public async Task CreateAsync(TDto entityDto)
+    public async Task<T> CreateAsync(TDto entityDto)
     {
         var entity = mapper.Map<T>(entityDto);
         await repository.CreateAsync(entity);
+        return entity;
     }
 
     public async Task UpdateAsync(int id, TDto entityDto)
