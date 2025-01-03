@@ -9,7 +9,7 @@ public static class Authorizer
     public static WebApplicationBuilder AddAuthentication(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer("Client" , options =>
+            .AddJwtBearer("Client", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -18,17 +18,8 @@ public static class Authorizer
                     ValidateIssuerSigningKey = true,
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
-                };
-            })
-            .AddJwtBearer("Admin" , options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey("admin-secret-key+admin-secret-key"u8.ToArray()),
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
                 };
             });
         return builder;

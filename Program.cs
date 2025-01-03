@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen(options =>
     .AddControllers().Services
     .AddSignalR();
 
-builder.AddDb().AddAuthentication().AddCors(corsPolicy).InjectDependencies();
+builder.AddDb().AddAuthentication().InjectDependencies();
 
 
 var app = builder.Build();
@@ -48,7 +48,6 @@ if (app.Environment.IsDevelopment())
 app.CreateDbIfNotExists();
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors(corsPolicy);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

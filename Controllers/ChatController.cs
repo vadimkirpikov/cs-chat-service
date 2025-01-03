@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChatService.Controllers;
 
 [ApiController]
-[Authorize(AuthenticationSchemes = "Admin")]
+[Authorize(AuthenticationSchemes = "Client")]
 [Route("api/v1/chats")]
 public class ChatController(IChatService chatService): ControllerBase
 {
