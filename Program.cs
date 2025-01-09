@@ -3,7 +3,6 @@ using ChatService.Utils.Extensions;
 using CsApi.Utils.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-const string corsPolicy = "AllowAll";
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -32,12 +31,20 @@ builder.Services.AddSwaggerGen(options =>
         });
     })
     .AddControllers().Services
+    .AddCors(options =>
+    {
+        options.AddDefaultPolicy(b =>
+        {
+            b.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    })
     .AddSignalR();
 
-builder.AddDb().AddAuthentication().InjectDependencies();
+var app = builder.AddDb().AddAuthentication().InjectDependencies().Build();
 
-
-var app = builder.Build();
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
