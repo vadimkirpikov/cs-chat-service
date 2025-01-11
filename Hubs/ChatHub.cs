@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using ChatService.Models.Dto;
 using ChatService.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -26,8 +27,29 @@ public class ChatHub(IMessageService messageService, IChatService chatService): 
 
     public async Task SendMessage(MessageDto messageDto)
     {
+        var userId = int.Parse(Context.User!.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        messageDto.SenderId = userId;
         var message = await messageService.CreateAsync(messageDto);
+
         await Clients.Group(messageDto.ChatId.ToString())
             .SendAsync("ReceiveMessage", message);
+    }
+
+    public async Task UpdateMessage(int id, MessageDto messageDto)
+    {
+        var userId = int.Parse(Context.User!.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        messageDto.SenderId = userId;
+        await messageService.EditPersonalMessageAsync(id, messageDto);
+
+        await Clients.Group(messageDto.ChatId.ToString())
+            .SendAsync("MessageUpdated", id, messageDto);
+    }
+
+    public async Task DeleteMessageAsync(int id, int chatId)
+    {
+        await messageService.DeleteAsync(id);
+
+        await Clients.Group(chatId.ToString())
+            .SendAsync("MessageDeleted", id);
     }
 }

@@ -12,4 +12,14 @@ public class MessageService(IMessageRepository repository, IMapper mapper) : Ser
     {
         return await repository.GetMessagesOfChatAsync(chatId, page, pageSize);
     }
+
+    public async Task EditPersonalMessageAsync(int id, MessageDto messageDto)
+    {
+        var message = await GetAsync(id);
+        if (message.SenderId != messageDto.SenderId)
+        {
+            throw new ArgumentException("Sender id does not match");
+        }
+        await UpdateAsync(id, messageDto);
+    }
 }
